@@ -1,0 +1,11 @@
+﻿field,description,unit_or_type
+patient_id,脱敏受试者编号,字符串
+center,入组中心,分类
+analysis_split,训练/内部验证/外部验证划分,分类
+cgm_valid_pct,剔除前2天后CGM有效读数比例,0-1
+tir_3p9_10_pct,目标范围3.9-10.0 mmol/L时间占比,%
+tar_gt10_pct,高于10.0 mmol/L时间占比,%
+tbr_lt3p9_pct,低于3.9 mmol/L时间占比,%
+cv_pct,血糖变异系数,%
+high_auc_mmol_day,高糖暴露面积近似值,mmol/L*day
+remission_12m,模拟的12个月缓解结局,0/1

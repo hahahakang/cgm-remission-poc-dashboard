@@ -1,0 +1,248 @@
+{
+  "project": "三中心CGM糖尿病缓解预测PoC",
+  "data_notice": "全部数据为模拟脱敏样例，不含真实患者信息。",
+  "run_at": "2026-07-04T23:09:23+08:00",
+  "random_seed": 20260704,
+  "python": "3.12.13",
+  "script": {
+    "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/src/run_poc.py",
+    "sha256": "83ae73cc9385e021e2f2235f12c12ad98d0a67628842e30391460c89c4bf4c7b"
+  },
+  "sample_flow": {
+    "patients_total": 120,
+    "patients_qc_pass": 116,
+    "patients_qc_excluded": 4,
+    "splits_after_qc": {
+      "train": 52,
+      "external_validation": 40,
+      "internal_validation": 24
+    },
+    "outcome_event_rate_after_qc": 0.3448
+  },
+  "inputs": [
+    {
+      "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/data/raw/clinical_baseline.csv",
+      "sha256": "d9f79dcbdb431e44d393d4ef1158392495e6e782e52c7224f72db5bc34719fed",
+      "bytes": 11899
+    },
+    {
+      "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/data/raw/cgm_timeseries.csv",
+      "sha256": "6e5abd5c0bdf6e8552bebd2874b1dc343de071bfc63ec4b2733a5a82e5a5f86c",
+      "bytes": 6471647
+    }
+  ],
+  "outputs": [
+    {
+      "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/data/processed/patient_features.csv",
+      "sha256": "2eb7e9812c7f0dcc2ba2e1ff14185ce83e2813cf8be478be25defbea9d9b80c3",
+      "bytes": 19554
+    },
+    {
+      "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/reports/data_quality_report.csv",
+      "sha256": "d0b4a2b6a0fecb31874618ceca1c3e616813367b687dae3eeccf7efaf9f53cf3",
+      "bytes": 7929
+    },
+    {
+      "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/reports/model_metrics.csv",
+      "sha256": "768d0c886157e185b11a7ad1f4df2a3fbc350269a422dc76848ca2274df0025b",
+      "bytes": 887
+    },
+    {
+      "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/reports/sample_patient_predictions.csv",
+      "sha256": "be9cef1a0d3b9a195cfe778e40ac9d07bb88fc66b998d9a88979b4ca1efec5e5",
+      "bytes": 21714
+    },
+    {
+      "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/reports/data_dictionary.csv",
+      "sha256": "cc5d9a29be3c4ec174d8e149662654d01375933e82102ad21ac9af5edae93648",
+      "bytes": 512
+    },
+    {
+      "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/reports/poc_summary.md",
+      "sha256": "534ffd21a54c3dad7c5747375d14fa5be00b368920d21417592e1dfb18202f47",
+      "bytes": 1479
+    },
+    {
+      "path": "/Users/xuan/Documents/航天中心医院项目/poc_cgm_remission/reports/audit_manifest.json",
+      "sha256": "af1bafef7a04c71788e0d7d3df4137e5e5c279c1415f8420206219f892370f4e",
+      "bytes": 8103
+    }
+  ],
+  "model_cards": {
+    "静态临床Logistic": {
+      "features": [
+        "age",
+        "bmi",
+        "diabetes_duration_years",
+        "baseline_hba1c_pct",
+        "fasting_glucose_mmol_l",
+        "c_peptide_2h_ug_l"
+      ],
+      "transform": {
+        "medians": {
+          "age": 45.75,
+          "bmi": 28.799999999999997,
+          "diabetes_duration_years": 1.37,
+          "baseline_hba1c_pct": 8.045,
+          "fasting_glucose_mmol_l": 10.120000000000001,
+          "c_peptide_2h_ug_l": 3.685
+        },
+        "means": {
+          "age": 44.96538461538462,
+          "bmi": 29.05576923076923,
+          "diabetes_duration_years": 1.5348076923076923,
+          "baseline_hba1c_pct": 8.041153846153845,
+          "fasting_glucose_mmol_l": 10.12346153846154,
+          "c_peptide_2h_ug_l": 3.686346153846154
+        },
+        "stds": {
+          "age": 7.280080425786324,
+          "bmi": 2.9921958403061724,
+          "diabetes_duration_years": 1.0448711558122947,
+          "baseline_hba1c_pct": 0.7883055192728111,
+          "fasting_glucose_mmol_l": 0.5758835506465916,
+          "c_peptide_2h_ug_l": 0.5561233567022901
+        }
+      },
+      "weights": [
+        -0.583533,
+        0.002571,
+        -0.038505,
+        0.124835,
+        -0.158396,
+        -0.400362,
+        0.140222
+      ]
+    },
+    "CGM特征模型": {
+      "features": [
+        "tir_3p9_10_pct",
+        "tar_gt10_pct",
+        "tbr_lt3p9_pct",
+        "mean_glucose_mmol_l",
+        "sd_glucose_mmol_l",
+        "cv_pct",
+        "low_event_count",
+        "high_auc_mmol_day"
+      ],
+      "transform": {
+        "medians": {
+          "tir_3p9_10_pct": 100.0,
+          "tar_gt10_pct": 0.0,
+          "tbr_lt3p9_pct": 0.0,
+          "mean_glucose_mmol_l": 6.42,
+          "sd_glucose_mmol_l": 0.845,
+          "cv_pct": 13.16,
+          "low_event_count": 0.0,
+          "high_auc_mmol_day": 0.0
+        },
+        "means": {
+          "tir_3p9_10_pct": 99.61730769230768,
+          "tar_gt10_pct": 0.26942307692307693,
+          "tbr_lt3p9_pct": 0.11307692307692307,
+          "mean_glucose_mmol_l": 6.448653846153846,
+          "sd_glucose_mmol_l": 0.841153846153846,
+          "cv_pct": 12.934807692307693,
+          "low_event_count": 1.2307692307692308,
+          "high_auc_mmol_day": 0.030000000000000002
+        },
+        "stds": {
+          "tir_3p9_10_pct": 0.9805181428216243,
+          "tar_gt10_pct": 0.9006993297124067,
+          "tbr_lt3p9_pct": 0.3121977828577611,
+          "mean_glucose_mmol_l": 0.5486663160167216,
+          "sd_glucose_mmol_l": 0.21438331814903816,
+          "cv_pct": 2.6063166541077254,
+          "low_event_count": 3.4172378894217195,
+          "high_auc_mmol_day": 0.11658605273491204
+        }
+      },
+      "weights": [
+        -0.566235,
+        0.079887,
+        -0.030079,
+        -0.152605,
+        -0.304925,
+        0.062414,
+        0.404709,
+        -0.033757,
+        0.145923
+      ]
+    },
+    "临床+CGM融合模型": {
+      "features": [
+        "age",
+        "bmi",
+        "diabetes_duration_years",
+        "baseline_hba1c_pct",
+        "fasting_glucose_mmol_l",
+        "c_peptide_2h_ug_l",
+        "tir_3p9_10_pct",
+        "tar_gt10_pct",
+        "mean_glucose_mmol_l",
+        "cv_pct",
+        "low_event_count",
+        "high_auc_mmol_day"
+      ],
+      "transform": {
+        "medians": {
+          "age": 45.75,
+          "bmi": 28.799999999999997,
+          "diabetes_duration_years": 1.37,
+          "baseline_hba1c_pct": 8.045,
+          "fasting_glucose_mmol_l": 10.120000000000001,
+          "c_peptide_2h_ug_l": 3.685,
+          "tir_3p9_10_pct": 100.0,
+          "tar_gt10_pct": 0.0,
+          "mean_glucose_mmol_l": 6.42,
+          "cv_pct": 13.16,
+          "low_event_count": 0.0,
+          "high_auc_mmol_day": 0.0
+        },
+        "means": {
+          "age": 44.96538461538462,
+          "bmi": 29.05576923076923,
+          "diabetes_duration_years": 1.5348076923076923,
+          "baseline_hba1c_pct": 8.041153846153845,
+          "fasting_glucose_mmol_l": 10.12346153846154,
+          "c_peptide_2h_ug_l": 3.686346153846154,
+          "tir_3p9_10_pct": 99.61730769230768,
+          "tar_gt10_pct": 0.26942307692307693,
+          "mean_glucose_mmol_l": 6.448653846153846,
+          "cv_pct": 12.934807692307693,
+          "low_event_count": 1.2307692307692308,
+          "high_auc_mmol_day": 0.030000000000000002
+        },
+        "stds": {
+          "age": 7.280080425786324,
+          "bmi": 2.9921958403061724,
+          "diabetes_duration_years": 1.0448711558122947,
+          "baseline_hba1c_pct": 0.7883055192728111,
+          "fasting_glucose_mmol_l": 0.5758835506465916,
+          "c_peptide_2h_ug_l": 0.5561233567022901,
+          "tir_3p9_10_pct": 0.9805181428216243,
+          "tar_gt10_pct": 0.9006993297124067,
+          "mean_glucose_mmol_l": 0.5486663160167216,
+          "cv_pct": 2.6063166541077254,
+          "low_event_count": 3.4172378894217195,
+          "high_auc_mmol_day": 0.11658605273491204
+        }
+      },
+      "weights": [
+        -0.596371,
+        -0.085678,
+        -0.054346,
+        0.132619,
+        -0.361505,
+        -0.426806,
+        0.228813,
+        0.115054,
+        0.019328,
+        0.164183,
+        0.197925,
+        -0.333162,
+        0.151949
+      ]
+    }
+  }
+}
