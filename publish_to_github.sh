@@ -10,7 +10,7 @@ REPO_URL="$1"
 
 git remote remove origin >/dev/null 2>&1 || true
 git remote add origin "$REPO_URL"
-git push -u origin main
+git -c http.version=HTTP/1.1 push -u origin main
 
 cat <<'MSG'
 
