@@ -1,0 +1,7 @@
+﻿experiment_id,model,method_type,data_input,answers,uses_raw_sequence
+E0,HbA1c单指标基线,临床单指标,baseline_hba1c_pct,单个静态指标能否解释缓解结局,False
+E1,传统Logistic：静态临床,传统统计,人口学+BMI+病程+HbA1c+C肽,传统统计基线能做到什么水平,False
+E2,传统机器学习：表格人工特征,非深度表格ML基线,静态临床+CGM人工统计特征+非线性交互,人工特征和非线性表格模型是否足够,False
+E3,CGM人工统计特征模型,CGM摘要特征基线,TIR/TAR/TBR/CV/高糖暴露等人工CGM摘要,只用CGM摘要指标是否能捕捉缓解潜力,False
+E4,本课题CGM时序大模型PoC,5分钟原始序列时序模型代理,5分钟CGM原始序列切片、节律、餐后、跨日稳定性嵌入,直接读取原始序列的时序表示是否优于人工摘要,True
+E5,时序模型消融：无时间编码,架构消融,去除24h/12h节律、黎明和餐后窗口后的序列摘要,时间编码、节律和餐后窗口对模型是否必要,True

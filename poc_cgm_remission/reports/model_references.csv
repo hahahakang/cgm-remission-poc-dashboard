@@ -1,0 +1,6 @@
+﻿model,proposed_by,does_what,relation_to_poc,borrowable,source_url
+GluFormer,Guy Lutsker、Gal Sapir、Smadar Shilo、Eran Segal团队等；Nature 2026,自监督生成式CGM基础模型，用自回归预测学习长期代谢健康表征,证明CGM表征可用于长期结局风险分层；本PoC借鉴自监督预训练和可迁移表征，不直接照搬其人群/任务,自回归预训练、跨设备/跨人群泛化验证、下游结局微调,https://www.nature.com/articles/s41586-025-09925-9
+CGMformer,Yurun Lu、Dan Liu、Zhongming Liang等；National Science Review 2025,注意力Transformer预训练模型，学习个体葡萄糖动态表征，用于筛查、分型和饮食建议等任务,与三中心中国人群CGM队列最接近；可借鉴每日CGM profile token化、masked learning和个体嵌入,日级切片、时间点/个体embedding、masked reconstruction、下游微调,https://academic.oup.com/nsr/article/12/5/nwaf039/8005967
+CGM-LSM,Junjie Luo、Abhimanyu Kumbara、Ritu Agarwal、Gordon Gao等；npj Health Systems 2025,Large Sensor Model，把CGM数值离散成token，GPT式decoder做近期血糖预测,主要做短期forecasting，不是缓解预测；但可借鉴CGM token化和next-token预训练,离散token、decoder-only预训练、zero-shot泛化评估,https://www.nature.com/articles/s44401-025-00039-y
+SSM-CGM,Shakson Isaac、Yentl Collin、Chirag J. Patel；NeurIPS TS4H 2025 workshop/arXiv,Mamba状态空间CGM预测模型，结合可穿戴生理信号，强调可解释和反事实模拟,适合长序列高效建模；本项目可借鉴状态空间层、时间归因和临床可解释输出,Mamba/SSM长上下文、变量选择、时间归因、反事实窗口,https://github.com/shakson-isaac/SSM-CGM
+GluLLM,Taiyu Zhu、Joanna Howson、Alejo Nevado-Holgado；Oxford/Novo Nordisk Research Centre Oxford,面向端侧血糖预测的多模态LLM适配框架，整合CGM、活动日志和EHR,更偏端侧预测和多模态交互；本项目可借鉴adapter和合规部署，但不把LLM直接当缓解预测器,多模态adapter、端侧推理、解释性自然语言报告,https://github.com/tndrg/GluLLM

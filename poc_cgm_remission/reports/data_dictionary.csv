@@ -2,10 +2,18 @@
 patient_id,脱敏受试者编号,字符串
 center,入组中心,分类
 analysis_split,训练/内部验证/外部验证划分,分类
+timestamp_utc,CGM采样时间戳；本版PoC为5分钟粒度,ISO时间
+minute_of_day,一天内分钟数，用于节律/餐后窗口编码,0-1435
 cgm_valid_pct,剔除前2天后CGM有效读数比例,0-1
 tir_3p9_10_pct,目标范围3.9-10.0 mmol/L时间占比,%
 tar_gt10_pct,高于10.0 mmol/L时间占比,%
+tar_gt13p9_pct,显著高糖暴露时间占比,%
 tbr_lt3p9_pct,低于3.9 mmol/L时间占比,%
 cv_pct,血糖变异系数,%
-high_auc_mmol_day,高糖暴露面积近似值,mmol/L*day
+high_auc_mmol_hour_per_day,日均高糖暴露面积近似值,mmol/L*hour/day
+seq_amp_24h,24小时节律幅度嵌入,mmol/L
+seq_amp_12h,12小时节律幅度嵌入,mmol/L
+seq_autocorr_1h,1小时滞后自相关,相关系数
+seq_instability_mmol_l,5分钟差分绝对值均值,mmol/L
+seq_postprandial_peak_mean,三餐后窗口90分位峰值均值,mmol/L
 remission_12m,模拟的12个月缓解结局,0/1

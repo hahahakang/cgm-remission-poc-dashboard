@@ -1,0 +1,72 @@
+{
+  "input_format": [
+    {
+      "component": "X_cgm",
+      "shape": "[B, 12, 288, C]",
+      "description": "剔除前2天后的12天有效CGM；5分钟粒度，每天288点；C包含glucose、delta、mask、time_sin、time_cos、day_index、meal_window_proxy。"
+    },
+    {
+      "component": "X_static_optional",
+      "shape": "[B, P]",
+      "description": "年龄、BMI、病程、HbA1c、C肽等只进入校准/分层头；主实验把静态模型与CGM时序模型分开比较，避免概念混搭。"
+    },
+    {
+      "component": "Y",
+      "shape": "[B, 1]",
+      "description": "12个月糖尿病缓解结局：停用降糖药至少3个月且HbA1c/FPG达标。"
+    }
+  ],
+  "architecture": [
+    {
+      "stage": "质控与对齐",
+      "design": "原始5分钟点位、mask保留缺失，不简单抹平；生成day/time/meal窗口编码。",
+      "output": "标准序列张量+缺失mask"
+    },
+    {
+      "stage": "多尺度token化",
+      "design": "5分钟点先入局部卷积/patch embedding；30分钟patch、日级summary token、跨日稳定性token并行。",
+      "output": "patch tokens + day tokens"
+    },
+    {
+      "stage": "时序编码器",
+      "design": "Transformer/SSM混合：局部波动用TCN，长程节律用self-attention或Mamba状态空间层。",
+      "output": "time-point embedding与patient embedding"
+    },
+    {
+      "stage": "自监督预训练",
+      "design": "masked reconstruction、next-window prediction、TIR/TAR辅助任务，先学CGM生成规律。",
+      "output": "可迁移CGM表征"
+    },
+    {
+      "stage": "缓解预测微调",
+      "design": "patient [CLS]/attention pooling接Logistic/MLP head；外部验证前锁定阈值和校准。",
+      "output": "p_remission_12m、risk_band"
+    },
+    {
+      "stage": "可解释输出",
+      "design": "attention/gradient/temporal attribution定位餐后、夜间、黎明、高波动窗口。",
+      "output": "top_windows、driver_features、uncertainty"
+    }
+  ],
+  "output_schema": {
+    "patient_id": "POC001",
+    "model_version": "cgm_temporal_poc_v2_5min",
+    "p_remission_12m": 0.42,
+    "risk_band": "中缓解潜力",
+    "top_temporal_evidence": [
+      "夜间均值偏高",
+      "晚餐后峰值持续",
+      "跨日波动稳定性一般"
+    ],
+    "qc_flags": [
+      "CGM有效率>=90%"
+    ],
+    "calibration_note": "PoC为模拟样例；正式模型需真实三中心队列校准。"
+  },
+  "training_plan": [
+    "阶段1：用全部合格CGM窗口做自监督预训练，不使用缓解标签。",
+    "阶段2：训练集微调缓解预测头；内部验证做Bootstrap和校准。",
+    "阶段3：120例外部验证队列一次性评估，不参与变量筛选、训练或阈值调参。",
+    "阶段4：与HbA1c、静态Logistic、传统ML、CGM人工统计特征、架构消融组比较。"
+  ]
+}
